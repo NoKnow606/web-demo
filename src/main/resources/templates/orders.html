@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>Group Detail</title>
+</head>
+<body>
+<!--<div th:text="${res.code}"></div>-->
+<div th:if="${res.code!=0}">
+    <div th:text="${res.code}"></div>
+    <div th:text="${res.msg}"></div>
+</div>
+<div th:if="${res.code == 0}">
+    <h5> 参与的分组 </h5>
+    <table>
+        <tr>
+            <th>组名</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="userGroupOrder : ${res.data}">
+            <th scope="row" th:text="${userGroupOrder.themeName}"></th>
+            <th><a th:href="@{/group/{id}(id=${userGroupOrder.themeId})}">查看分组情况</a></th>
+            <th> <a th:if="${userGroupOrder.type =='launchGroup'}" th:href="@{/group/delete/{id}(id=${userGroupOrder.themeId})}">取消分组</a></th>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

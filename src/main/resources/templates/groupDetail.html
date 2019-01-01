@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>Group Detail</title>
+</head>
+<body>
+<!--<div th:text="${res.code}"></div>-->
+<div th:if="${res.code!=0}">
+    <h5> 该分组的情况 </h5>
+    <div th:text="${res.code}"></div>
+    <div th:text="${res.msg}"></div>
+</div>
+<div th:if="${res.code == 0}">
+    <h5> 该分组的情况 </h5>
+    <table>
+        <legend th:text="${res.data.themeName}">
+        </legend>
+        <thead>
+        <tr>
+            <th>组名</th>
+            <th>人数</th>
+            <th>组员</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="groupInfoDetail : ${res.data.groupInfoDetails}">
+            <th scope="row" th:text="${groupInfoDetail.groupName}"></th>
+            <th scope="row" th:text="${groupInfoDetail.count}"></th>
+            <th scope="row" th:each="member : ${groupInfoDetail.groupMember}">
+                <span th:text="${member}"></span>
+            </th>
+        </tr>
+        </tbody>
+    </table>
+    <a th:href="@{/group/participate/{id}(id=${res.data.themeId})}">参与分组</a>
+</div>
+
+</body>
+</html>

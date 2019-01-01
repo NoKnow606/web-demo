@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>Spring Security Example </title>
+</head>
+<body>
+<form th:action="@{/group/launch}" method="post">
+    <div><label> 主题 : <input type="text" name="theme"/> </label></div>
+    <div><label> 参与人数 : <input type="number" name="numbers"/> </label></div>
+    <div><label> 分组个数 : <input type="number" name="groupCount"/> </label></div>
+    <div><input type="submit" id= "launch" value="创建分组"/></div>
+</form>
+</body>
+</html>
