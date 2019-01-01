@@ -2,6 +2,7 @@ package com.example.demo;
 
 //import com.example.demo.service.LoginService;
 import com.example.demo.service.User.UserService;
+//import org.apache.catalina.authenticator.SavedRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,11 +20,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @Configuration
@@ -43,7 +46,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure (HttpSecurity httpSecurity) throws Exception{
         httpSecurity.authorizeRequests()
-                .antMatchers("/","/login","/register","/group/13").permitAll()
+                .antMatchers("/","/login","/register").permitAll()
                 //其他地址的访问均需验证权限
                 .anyRequest().authenticated()
                 .and()
@@ -59,7 +62,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                             System.out.println("loginUser:"+user.getUsername());
                             //维护在session中
                             httpServletRequest.getSession().setAttribute("userDetail", user);
-                            httpServletResponse.sendRedirect("/loginSuccess");
+                            SavedRequest savedRequest = (SavedRequest) httpServletRequest.getSession().getAttribute("SPRING_SECURITY_SAVED_REQUEST");
+                            if(savedRequest!=null){
+                                httpServletResponse.sendRedirect(savedRequest.getRedirectUrl());
+                            }else {
+                                httpServletResponse.sendRedirect("/loginSuccess");
+                            }
                         }
                     }
                 })

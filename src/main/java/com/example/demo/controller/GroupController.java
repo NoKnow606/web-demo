@@ -209,7 +209,6 @@ public class GroupController {
         }
         groupDetail.setGroupInfoDetails(list);
         result.setSuccessResponse(groupDetail);
-        System.out.println(result.getCode()+result.getMsg()+result.getData().getThemeName());
         map.addAttribute("res",result);
         return "groupDetail";
     }

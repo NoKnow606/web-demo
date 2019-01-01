@@ -6,11 +6,14 @@ import com.example.demo.domain.SystemUser;
 import com.example.demo.service.User.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 //@RestController
 @Controller
@@ -23,11 +26,6 @@ public class LoginController {
     @RequestMapping("/")
     public String index() {
         return "index";
-    }
-
-    @RequestMapping("/hello")
-    public String hello() {
-        return "hello";
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
@@ -44,12 +42,13 @@ public class LoginController {
     public String register(){return "register";}
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String register(@ModelAttribute SystemUser user, BindingResult bindingResult) {
+    public String register(@ModelAttribute SystemUser user, ModelMap map) {
 //        UserService userService = new UserService();
         String username = user.getUsername();
         SystemUser existsUser = systemUserRepository.findByUsername(username);
         if(existsUser!=null){
-            bindingResult.reject("用户已经存在");
+            map.addAttribute("error","用户已存在");
+            map.addAttribute("code",1000);
             return "register";
         }
         String password = user.getPassword();
@@ -63,5 +62,15 @@ public class LoginController {
     @RequestMapping(value = "/launchGroup",method = RequestMethod.GET)
     public String launchGroup(){
         return "launchGroup";
+    }
+
+    @RequestMapping(value = "/back",method = RequestMethod.GET)
+    public String back(HttpSession session){
+        SavedRequest savedRequest = (SavedRequest) session.getAttribute("SPRING_SECURITY_SAVED_REQUEST");
+        if(savedRequest!=null) {
+            return "redirect:" + savedRequest.getRedirectUrl();
+        }else {
+            return "redirect:/loginSuccess";
+        }
     }
 }
